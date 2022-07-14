@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  study-meeting-psql:
+    image: postgres:9.6
+    container_name: study-meeting-psql
+    ports:
+      - 15432:5432
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=study-meeting
+      - POSTGRES_USER=student
+      - POSTGRES_PASSWORD=password
