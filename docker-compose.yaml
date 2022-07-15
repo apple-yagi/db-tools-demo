@@ -1,4 +1,8 @@
 version: "3.8"
+
+volumes:
+  study-meeting-psql:
+
 services:
   study-meeting-psql:
     image: postgres:9.6
@@ -7,7 +11,24 @@ services:
       - 15432:5432
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
+      - study-meeting-psql:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=study-meeting
       - POSTGRES_USER=student
       - POSTGRES_PASSWORD=password
+
+  study-meeting-metabase:
+    depends_on:
+      - study-meeting-psql
+    image: metabase/metabase:latest
+    container_name: study-meeting-metabase
+    ports:
+      - 3000:3000
+    environment:
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=study-meeting
+      - MB_DB_PORT=5432
+      - MB_DB_USER=student
+      - MB_DB_PASS=password
+      - MB_DB_HOST=study-meeting-psql
+    
